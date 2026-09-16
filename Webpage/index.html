@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDF Cultivation Calculator · Path of the Owl</title>
+
+<style>
+  :root {
+    --bg-0: #06070d;
+    --bg-1: #0d0a18;
+    --bg-2: #1a0a0a;
+    --text: #f5f2ff;
+    --muted: #aaa6c2;
+    --gold: #e8b66a;
+    --gold-bright: #ffd388;
+    --purple: #9b5cff;
+    --blue: #54d9ff;
+    --red: #ff5a3c;
+    --orange: #ff8a3c;
+    --ember: #ffb347;
+    --border: rgba(232, 182, 106, 0.28);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    background: var(--bg-0);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+
+    background:
+      linear-gradient(
+        rgba(6, 7, 13, 0.42),
+        rgba(6, 7, 13, 0.42)
+      ),
+      url("cooldown-fam.jpg") center center / cover fixed no-repeat;
+
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+
+    background:
+      radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(0, 0, 0, 0.28) 100%
+      );
+
+    pointer-events: none;
+    z-index: 0;
+  }
+
+
+  /* =========================
+     MAIN APP
+  ========================= */
+
+  .app {
+    position: relative;
+    z-index: 5;
+
+    width: min(900px, 94%);
+    margin: auto;
+
+    padding:
+      50px 0 80px;
+  }
+
+
+  /* =========================
+     CDF BADGE
+  ========================= */
+
+  .cdf-mark {
+    position: fixed;
+
+    top: 14px;
+    right: 18px;
+
+    font-family: 'Cinzel', serif;
+
+    letter-spacing: 0.16em;
+
+    color: var(--gold-bright);
+
+    font-size: 11px;
+
+    background:
+      rgba(13, 10, 24, 0.75);
+
+    border:
+      1px solid var(--border);
+
+    padding:
+      6px 12px;
+
+    border-radius:
+      999px;
+
+    z-index: 50;
+
+    backdrop-filter:
+      blur(8px);
+  }
+
+  .cdf-mark b {
+    color: #ff8a3c;
+  }
+
+
+  /* =========================
+     HEADER
+  ========================= */
+
+  header {
+    text-align: center;
+
+    padding:
+      28px 0 20px;
+  }
+
+
+  h1 {
+    margin: 0;
+
+    font-family: 'Cinzel', serif;
+
+    font-weight: 700;
+
+    font-size:
+      clamp(32px, 6vw, 56px);
+
+    letter-spacing:
+      0.04em;
+
+    line-height:
+      1.1;
+
+    background:
+      linear-gradient(
+        180deg,
+        #ffd388 0%,
+        #ff8a3c 50%,
+        #c33a1c 100%
+      );
+
+    -webkit-background-clip:
+      text;
+
+    background-clip:
+      text;
+
+    -webkit-text-fill-color:
+      transparent;
+
+    filter:
+      drop-shadow(
+        0 0 24px
+        rgba(255, 120, 40, 0.45)
+      );
+  }
+
+
+  /* Keep the owl fully visible */
+
+  .owl {
+    display: inline-block;
+
+    -webkit-text-fill-color:
+      initial;
+
+    background:
+      none;
+
+    font-size:
+      0.92em;
+
+    filter:
+      drop-shadow(
+        0 0 10px
+        rgba(255, 179, 71, 0.55)
+      );
+
+    vertical-align:
+      -0.05em;
+  }
+
+
+  .sub {
+    color:
+      var(--gold-bright);
+
+    font-family:
+      'Cinzel', serif;
+
+    font-weight:
+      500;
+
+    font-size:
+      13px;
+
+    letter-spacing:
+      0.22em;
+
+    text-transform:
+      uppercase;
+
+    margin-top:
+      12px;
+
+    opacity:
+      0.92;
+  }
+
+
+  .tagline {
+    color:
+      rgba(
+        245,
+        242,
+        255,
+        0.9
+      );
+
+    font-size:
+      13px;
+
+    margin:
+      14px auto 0;
+
+    max-width:
+      600px;
+
+    line-height:
+      1.6;
+
+    font-style:
+      italic;
+
+    background:
+      rgba(
+        5,
+        5,
+        12,
+        0.68
+      );
+
+    border:
+      1px solid
+      rgba(
+        232,
+        182,
+        106,
+        0.2
+      );
+
+    border-radius:
+      12px;
+
+    padding:
+      11px 16px;
+
+    text-shadow:
+      0 2px 5px
+      rgba(0, 0, 0, 0.9);
+
+    backdrop-filter:
+      blur(8px);
+  }
+
+
+  /* =========================
+     CARDS
+  ========================= */
+
+  .card {
+    background:
+      linear-gradient(
+        160deg,
+        rgba(28, 14, 40, 0.86) 0%,
+        rgba(11, 7, 18, 0.84) 100%
+      );
+
+    border:
+      1px solid var(--border);
+
+    border-radius:
+      18px;
+
+    padding:
+      28px;
+
+    margin:
+      24px 0;
+
+    backdrop-filter:
+      blur(14px);
+
+    box-shadow:
+      0 12px 35px
+      rgba(0, 0, 0, 0.5),
+
+      inset 0 1px 0
+      rgba(255, 211, 136, 0.1),
+
+      0 0 60px
+      rgba(255, 120, 40, 0.08);
+
+    position:
+      relative;
+  }
+
+
+  .card::before {
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius:
+      18px;
+
+    padding:
+      1px;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 211, 136, 0.3),
+        transparent 40%
+      );
+
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+
+    -webkit-mask-composite:
+      xor;
+
+    mask-composite:
+      exclude;
+
+    pointer-events:
+      none;
+  }
+
+
+  /* =========================
+     HEADINGS
+  ========================= */
+
+  h2 {
+    font-family:
+      'Cinzel', serif;
+
+    margin:
+      0 0 18px;
+
+    font-weight:
+      500;
+
+    color:
+      var(--gold-bright);
+
+    letter-spacing:
+      0.04em;
+
+    font-size:
+      20px;
+  }
+
+
+  /* =========================
+     FORM GRID
+  ========================= */
+
+  .grid2 {
+    display:
+      grid;
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap:
+      18px;
+  }
+
+
+  label {
+    display:
+      block;
+
+    color:
+      var(--muted);
+
+    font-size:
+      12px;
+
+    letter-spacing:
+      0.08em;
+
+    text-transform:
+      uppercase;
+
+    margin:
+      14px 0 8px;
+  }
+
+
+  input,
+  select {
+    width:
+      100%;
+
+    min-height:
+      48px;
+
+    padding:
+      14px 16px;
+
+    border-radius:
+      12px;
+
+    border:
+      1px solid
+      rgba(
+        232,
+        182,
+        106,
+        0.25
+      );
+
+    background:
+      rgba(
+        6,
+        7,
+        13,
+        0.7
+      );
+
+    color:
+      var(--text);
+
+    font-family:
+      'JetBrains Mono',
+      monospace;
+
+    font-size:
+      16px;
+
+    outline:
+      none;
+
+    transition:
+      all 0.2s;
+  }
+
+
+  input:focus,
+  select:focus {
+    border-color:
+      var(--gold-bright);
+
+    box-shadow:
+      0 0 0 3px
+      rgba(
+        255,
+        138,
+        60,
+        0.18
+      );
+  }
+
+
+  select {
+    appearance:
+      none;
+
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e8b66a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+
+    background-repeat:
+      no-repeat;
+
+    background-position:
+      right 14px center;
+
+    padding-right:
+      36px;
+  }
+
+  select option {
+    background:
+      #0d0a18;
+  }
+
+
+  /* =========================
+     BUTTONS
+  ========================= */
+
+  .buttons {
+    display:
+      flex;
+
+    gap:
+      12px;
+
+    margin-top:
+      18px;
+
+    flex-wrap:
+      wrap;
+  }
+
+
+  button {
+    border:
+      0;
+
+    border-radius:
+      12px;
+
+    padding:
+      14px 22px;
+
+    min-height:
+      48px;
+
+    font-family:
+      'Cinzel', serif;
+
+    font-weight:
+      600;
+
+    font-size:
+      13px;
+
+    letter-spacing:
+      0.1em;
+
+    text-transform:
+      uppercase;
+
+    cursor:
+      pointer;
+
+    transition:
+      all 0.2s;
+  }
+
+
+  .primary {
+    background:
+      linear-gradient(
+        90deg,
+        #c33a1c 0%,
+        #ff8a3c 60%,
+        #ffd388 100%
+      );
+
+    color:
+      #1a0a0a;
+
+    box-shadow:
+      0 4px 18px
+      rgba(
+        255,
+        120,
+        40,
+        0.4
+      );
+
+    flex:
+      1;
+
+    min-width:
+      160px;
+  }
+
+
+  .primary:hover {
+    transform:
+      translateY(-2px);
+
+    box-shadow:
+      0 8px 24px
+      rgba(
+        255,
+        138,
+        60,
+        0.55
+      );
+  }
+
+
+  .ghost {
+    background:
+      rgba(
+        232,
+        182,
+        106,
+        0.06
+      );
+
+    color:
+      var(--gold-bright);
+
+    border:
+      1px solid
+      var(--border);
+
+    flex:
+      1;
+
+    min-width:
+      140px;
+  }
+
+
+  .ghost:hover {
+    background:
+      rgba(
+        232,
+        182,
+        106,
+        0.12
+      );
+  }
+
+
+  /* =========================
+     RESULT
+  ========================= */
+
+  .result {
+    text-align:
+      center;
+
+    padding:
+      32px 16px 24px;
+
+    background:
+      radial-gradient(
+        ellipse at center,
+        rgba(
+          255,
+          90,
+          30,
+          0.15
+        ) 0%,
+        transparent 70%
+      );
+
+    border:
+      1px solid
+      rgba(
+        255,
+        138,
+        60,
+        0.25
+      );
+
+    border-radius:
+      14px;
+
+    margin-top:
+      4px;
+  }
+
+
+  .result .small {
+    color:
+      var(--gold-bright);
+
+    font-family:
+      'Cinzel', serif;
+
+    letter-spacing:
+      0.18em;
+
+    text-transform:
+      uppercase;
+
+    font-size:
+      12px;
+
+    margin-bottom:
+      14px;
+
+    opacity:
+      0.9;
+  }
+
+
+  .value {
+    font-family:
+      'Cinzel', serif;
+
+    font-size:
+      clamp(
+        36px,
+        8vw,
+        64px
+      );
+
+    font-weight:
+      700;
+
+    background:
+      linear-gradient(
+        180deg,
+        #ffd388 0%,
+        #ff8a3c 100%
+      );
+
+    -webkit-background-clip:
+      text;
+
+    background-clip:
+      text;
+
+    -webkit-text-fill-color:
+      transparent;
+
+    filter:
+      drop-shadow(
+        0 0 18px
+        rgba(
+          255,
+          138,
+          60,
+          0.4
+        )
+      );
+
+    word-break:
+      break-word;
+
+    line-height:
+      1.1;
+  }
+
+
+  .formula {
+    color:
+      var(--muted);
+
+    font-size:
+      13px;
+
+    margin-top:
+      14px;
+
+    font-family:
+      'JetBrains Mono',
+      monospace;
+
+    line-height:
+      1.5;
+
+    overflow-wrap:
+      anywhere;
+  }
+
+
+  /* =========================
+     FOOTER
+  ========================= */
+
+  footer {
+    text-align:
+      center;
+
+    margin-top:
+      32px;
+
+    color:
+      rgba(
+        245,
+        242,
+        255,
+        0.5
+      );
+
+    font-size:
+      12px;
+
+    font-family:
+      'Cinzel',
+      serif;
+
+    letter-spacing:
+      0.14em;
+  }
+
+
+  /* =========================
+     TABLET
+  ========================= */
+
+  @media (max-width: 700px) {
+
+    .app {
+      width:
+        min(94%, 620px);
+
+      padding-top:
+        38px;
+    }
+
+    .grid2 {
+      grid-template-columns:
+        1fr;
+    }
+
+  }
+
+
+  /* =========================
+     PHONE
+  ========================= */
+
+  @media (max-width: 560px) {
+
+    .cdf-mark {
+      display:
+        none;
+    }
+
+
+    .app {
+      width:
+        calc(100% - 24px);
+
+      padding:
+        28px 0 55px;
+    }
+
+
+    header {
+      padding:
+        18px 0 12px;
+    }
+
+
+    /*
+      Mobile title:
+      owl and title scale together
+      without becoming cramped.
+    */
+
+    h1 {
+      font-size:
+        clamp(
+          27px,
+          8.3vw,
+          40px
+        );
+
+      letter-spacing:
+        0.025em;
+
+      line-height:
+        1.15;
+    }
+
+
+    .owl {
+      font-size:
+        0.88em;
+
+      margin-right:
+        3px;
+
+      vertical-align:
+        -0.04em;
+    }
+
+
+    .sub {
+      margin-top:
+        10px;
+
+      font-size:
+        10px;
+
+      letter-spacing:
+        0.16em;
+
+      line-height:
+        1.5;
+    }
+
+
+    .tagline {
+      margin-top:
+        13px;
+
+      padding:
+        11px 13px;
+
+      font-size:
+        11.5px;
+
+      line-height:
+        1.55;
+    }
+
+
+    .card {
+      margin:
+        18px 0;
+
+      padding:
+        20px 17px;
+
+      border-radius:
+        16px;
+    }
+
+
+    h2 {
+      font-size:
+        17px;
+
+      margin-bottom:
+        14px;
+    }
+
+
+    label {
+      font-size:
+        10px;
+
+      margin-top:
+        11px;
+    }
+
+
+    input,
+    select {
+      min-height:
+        50px;
+
+      padding:
+        14px;
+
+      font-size:
+        16px;
+
+      border-radius:
+        11px;
+    }
+
+
+    .buttons {
+      flex-direction:
+        column;
+
+      gap:
+        10px;
+    }
+
+
+    button {
+      width:
+        100%;
+
+      min-height:
+        50px;
+    }
+
+
+    .result {
+      padding:
+        27px 10px 22px;
+    }
+
+
+    .result .small {
+      font-size:
+        10px;
+
+      letter-spacing:
+        0.13em;
+
+      line-height:
+        1.5;
+    }
+
+
+    .value {
+      font-size:
+        clamp(
+          34px,
+          12vw,
+          52px
+        );
+    }
+
+
+    .formula {
+      font-size:
+        11px;
+
+      padding:
+        0 3px;
+    }
+
+
+    footer {
+      margin-top:
+        25px;
+
+      font-size:
+        9px;
+
+      letter-spacing:
+        0.12em;
+
+      line-height:
+        1.5;
+    }
+
+  }
+
+
+  /* =========================
+     VERY SMALL PHONES
+  ========================= */
+
+  @media (max-width: 360px) {
+
+    .app {
+      width:
+        calc(100% - 18px);
+    }
+
+
+    h1 {
+      font-size:
+        26px;
+    }
+
+
+    .owl {
+      font-size:
+        0.82em;
+    }
+
+
+    .sub {
+      font-size:
+        9px;
+
+      letter-spacing:
+        0.12em;
+    }
+
+
+    .tagline {
+      font-size:
+        11px;
+    }
+
+
+    .card {
+      padding:
+        18px 14px;
+    }
+
+
+    .value {
+      font-size:
+        31px;
+    }
+
+  }
+
+</style>
+</head>
+
+
+<body>
+
+<div class="cdf-mark">
+  CDF · <b>PATH OF THE OWL</b>
+</div>
+
+
+<div class="app">
+
+
+  <header>
+
+    <h1>
+      <span class="owl">🦉</span>
+      CDF Cultivation Calculator
+    </h1>
+
+    <div class="sub">
+      PATH · CULTIVATION · OWL DOMAIN
+    </div>
+
+    <p class="tagline">
+      Where the Path of the Owl meets the realm of the immortal and demonic.
+      Calculate your amplification through path, method, and fire.
+    </p>
+
+  </header>
+
+
+  <!-- CULTIVATION CALCULATOR -->
+
+  <div class="card">
+
+    <h2>
+      ☯ Cultivation Path Amplification
+    </h2>
+
+
+    <div class="grid2">
+
+      <div>
+
+        <label>
+          Starting Power
+        </label>
+
+        <input
+          id="pathPower"
+          type="number"
+          min="0"
+          step="any"
+          value="1000"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Path
+        </label>
+
+        <select id="pathType">
+
+          <option value="same">
+            Same Path
+          </option>
+
+          <option value="diff">
+            Different Path
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Method
+        </label>
+
+        <select id="pathMethod">
+
+          <option value="normal">
+            Normal
+          </option>
+
+          <option value="dw">
+            DW
+          </option>
+
+          <option value="wm">
+            WM
+          </option>
+
+          <option value="both">
+            DW + WM
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Optional Extra Power
+        </label>
+
+        <input
+          id="pathExtra"
+          type="number"
+          step="any"
+          value="0"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+      <button
+        class="primary"
+        onclick="calculatePath()"
+      >
+        🔥 IGNITE
+      </button>
+
+
+      <button
+        class="ghost"
+        onclick="resetPath()"
+      >
+        RESET
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- RESULT -->
+
+  <div class="card">
+
+    <div class="result">
+
+      <div
+        class="small"
+        id="pathLabel"
+      >
+        Same Path · Normal · ×1.100
+      </div>
+
+
+      <div
+        class="value"
+        id="pathResult"
+      >
+        1,100.00
+      </div>
+
+
+      <div
+        class="formula"
+        id="pathFormula"
+      >
+        1000 × 1.100 + 0 = 1100
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <footer>
+    FORGED IN FIRE · CULTIVATION DOMAIN FORGE
+  </footer>
+
+</div>
+
+
+<script>
+
+const $ = id =>
+  document.getElementById(id);
+
+
+const num = id =>
+  Math.max(
+    0,
+    Number(
+      $(id).value
+    ) || 0
+  );
+
+
+const format = value =>
+  Number(value).toLocaleString(
+    undefined,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4
+    }
+  );
+
+
+const methodNames = {
+
+  normal:
+    'Normal',
+
+  dw:
+    'DW',
+
+  wm:
+    'WM',
+
+  both:
+    'DW + WM'
+
+};
+
+
+/*
+  CULTIVATION FORMULA
+
+  SAME PATH
+
+  Normal:
+  Power × 1.10
+
+  DW:
+  Power × 1.10 × 1.03
+
+  WM:
+  Power × 1.10 × 1.05
+
+  DW + WM:
+  Power × 1.10 × 1.03 × 1.05
+
+
+  DIFFERENT PATH
+
+  Normal:
+  Power × 1.10 ÷ 0.90
+
+  DW:
+  Power × 1.10 × 1.03 ÷ 0.90
+
+  WM:
+  Power × 1.10 × 1.05 ÷ 0.90
+
+  DW + WM:
+  Power × 1.10 × 1.03 × 1.05 ÷ 0.90
+*/
+
+
+function calculatePath() {
+
+  const power =
+    num('pathPower');
+
+
+  const extra =
+    Number(
+      $('pathExtra').value
+    ) || 0;
+
+
+  const path =
+    $('pathType').value;
+
+
+  const method =
+    $('pathMethod').value;
+
+
+  let result =
+    power;
+
+
+  let formula =
+    format(power);
+
+
+  /*
+    Base
+  */
+
+  result *=
+    1.10;
+
+  formula +=
+    ' × 1.100';
+
+
+  /*
+    DW
+  */
+
+  if (
+    method === 'dw' ||
+    method === 'both'
+  ) {
+
+    result *=
+      1.03;
+
+    formula +=
+      ' × 1.030';
+
+  }
+
+
+  /*
+    WM
+  */
+
+  if (
+    method === 'wm' ||
+    method === 'both'
+  ) {
+
+    result *=
+      1.05;
+
+    formula +=
+      ' × 1.050';
+
+  }
+
+
+  /*
+    Different Path
+  */
+
+  if (
+    path === 'diff'
+  ) {
+
+    result /=
+      0.90;
+
+    formula +=
+      ' ÷ 0.900';
+
+  }
+
+
+  /*
+    Extra Power
+  */
+
+  result +=
+    extra;
+
+  formula +=
+    ' + ' +
+    format(extra);
+
+
+  /*
+    Display result
+  */
+
+  $('pathResult').textContent =
+    format(result);
+
+
+  /*
+    Display label
+  */
+
+  $('pathLabel').textContent =
+    (
+      path === 'same'
+        ? 'Same Path'
+        : 'Different Path'
+    )
+    +
+    ' · '
+    +
+    methodNames[method];
+
+
+  /*
+    Display formula
+  */
+
+  $('pathFormula').textContent =
+    formula
+    +
+    ' = '
+    +
+    format(result);
+
+}
+
+
+/*
+  RESET
+*/
+
+function resetPath() {
+
+  $('pathPower').value =
+    1000;
+
+  $('pathExtra').value =
+    0;
+
+  $('pathType').value =
+    'same';
+
+  $('pathMethod').value =
+    'normal';
+
+  calculatePath();
+
+}
+
+
+/*
+  LIVE CALCULATION
+*/
+
+document
+  .querySelectorAll(
+    'input, select'
+  )
+  .forEach(
+    element => {
+
+      element.addEventListener(
+        'input',
+        calculatePath
+      );
+
+      element.addEventListener(
+        'change',
+        calculatePath
+      );
+
+    }
+  );
+
+
+/*
+  INITIAL CALCULATION
+*/
+
+calculatePath();
+
+</script>
+
+</body>
+</html>
